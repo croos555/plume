@@ -173,10 +173,17 @@ jobs:
           CERTUM_EMAIL: ${{ env.SIGN_WINDOWS == 'true' && secrets.CERTUM_USERNAME || '' }}
           CERTUM_OTP: ${{ env.SIGN_WINDOWS == 'true' && secrets.CERTUM_TOTP_SECRET || '' }}
 
+      # The Tauri bundler signs the app inside the installer, then restores the unsigned binary in
+      # target/: check the installer and the app extracted from it instead
       - name: Verify Windows signatures
         if: env.SIGN_WINDOWS == 'true'
         run: |
-          for f in src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe src-tauri/target/x86_64-pc-windows-msvc/release/plume.exe; do
+          sudo apt-get install -y -qq p7zip-full >/dev/null
+          setup=$(ls src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*-setup.exe)
+          7z x -y -o/tmp/installer "$setup" >/dev/null
+          app=$(find /tmp/installer -maxdepth 2 -iname plume.exe | head -1)
+          test -n "$app"
+          for f in "$setup" "$app"; do
             echo "== $f"
             osslsigncode verify -in "$f" -CAfile /etc/ssl/certs/ca-certificates.crt | tee /tmp/verify.txt
             grep -q "Signature verification: ok" /tmp/verify.txt
