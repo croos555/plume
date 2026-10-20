@@ -2525,7 +2525,7 @@ dependencies = [
 name = "plume"
 version = "0.1.0"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.23.1",
  "core-foundation",
  "serde",
  "serde_json",
