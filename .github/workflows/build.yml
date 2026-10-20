@@ -173,17 +173,30 @@ jobs:
           CERTUM_EMAIL: ${{ env.SIGN_WINDOWS == 'true' && secrets.CERTUM_USERNAME || '' }}
           CERTUM_OTP: ${{ env.SIGN_WINDOWS == 'true' && secrets.CERTUM_TOTP_SECRET || '' }}
 
+      # Portable version: the app is a single self-contained exe. The bundler restores it unsigned in
+      # target/ after packing the installer, so it is copied and signed here.
+      - name: Portable executable
+        run: |
+          version=$(node -p "require('./src-tauri/tauri.conf.json').version")
+          portable="src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/Plume_${version}_x64-portable.exe"
+          cp src-tauri/target/x86_64-pc-windows-msvc/release/plume.exe "$portable"
+          if [ "$SIGN_WINDOWS" = "true" ]; then bash build/sign-win.sh "$portable"; fi
+        env:
+          CERTUM_EMAIL: ${{ env.SIGN_WINDOWS == 'true' && secrets.CERTUM_USERNAME || '' }}
+          CERTUM_OTP: ${{ env.SIGN_WINDOWS == 'true' && secrets.CERTUM_TOTP_SECRET || '' }}
+
       # The Tauri bundler signs the app inside the installer, then restores the unsigned binary in
-      # target/: check the installer and the app extracted from it instead
+      # target/: check the installer, the app extracted from it and the portable exe
       - name: Verify Windows signatures
         if: env.SIGN_WINDOWS == 'true'
         run: |
           sudo apt-get install -y -qq p7zip-full >/dev/null
           setup=$(ls src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*-setup.exe)
+          portable=$(ls src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*-portable.exe)
           7z x -y -o/tmp/installer "$setup" >/dev/null
           app=$(find /tmp/installer -maxdepth 2 -iname plume.exe | head -1)
           test -n "$app"
-          for f in "$setup" "$app"; do
+          for f in "$setup" "$app" "$portable"; do
             echo "== $f"
             osslsigncode verify -in "$f" -CAfile /etc/ssl/certs/ca-certificates.crt | tee /tmp/verify.txt
             grep -q "Signature verification: ok" /tmp/verify.txt

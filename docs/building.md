@@ -14,7 +14,7 @@ aarch64-apple-darwin`) for one app for Apple Silicon and Intel. Local builds are
 | --- | ------ | ------ |
 | `build-macos` | macos-latest | universal `.dmg`, signed and notarized on tags |
 | `build-linux` | ubuntu-22.04 and ubuntu-22.04-arm | `.AppImage`, `.deb`, `.rpm` for x64 and arm64 |
-| `build-windows` | ubuntu-24.04 | NSIS installer `-setup.exe`, cross-compiled with cargo-xwin, signed on tags |
+| `build-windows` | ubuntu-24.04 | NSIS installer `-setup.exe` and `-portable.exe`, cross-compiled with cargo-xwin, signed on tags |
 | `release` | ubuntu-latest | draft GitHub release with every file (pre-release for `-rc` tags) |
 
 To release: update the version in `package.json`, `src-tauri/Cargo.toml` and
@@ -45,7 +45,10 @@ CLI notarizes and staples. The job then checks the signature, Gatekeeper's verdi
 
 Certum "Code Signing in the Cloud" through [ssign](https://github.com/Le-Syl21/ssign), from Linux
 (no SimplySign Desktop). On tags, the workflow sets `bundle.windows.signCommand` to
-`build/sign-win.sh`, which the Tauri bundler calls for the app executable and the installer.
+`build/sign-win.sh`, which the Tauri bundler calls for the app executable and the installer. The
+bundler puts the unsigned binary back in `target/` afterwards, so the workflow copies it as the
+portable exe and signs that copy itself; it checks the installer, the app extracted from it (7-Zip)
+and the portable exe.
 
 | Secret | Content |
 | ------ | ------- |

@@ -19,7 +19,8 @@ First public release.
 - Welcome screen with recent documents, drag and drop, one window per document.
 - Settings: theme, language (English, French), text size, reading font, autosave, spell check.
 - "Open .md files with Plume" in the settings, offered once at first launch.
-- Packages for macOS (universal dmg), Windows (installer) and Linux (AppImage, deb, rpm).
+- Packages for macOS (universal dmg), Windows (installer and portable exe) and Linux (AppImage, deb,
+  rpm).
 
 [Unreleased]: https://github.com/croos555/plume/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/croos555/plume/releases/tag/v0.1.0

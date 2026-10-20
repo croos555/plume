@@ -40,12 +40,16 @@ Get the latest version from the [releases page](https://github.com/croos555/plum
 | System | File |
 | ------ | ---- |
 | macOS 11+ (Apple Silicon and Intel) | `Plume_x.y.z_universal.dmg` |
-| Windows 10 and 11 | `Plume_x.y.z_x64-setup.exe` |
+| Windows 10 and 11 | `Plume_x.y.z_x64-setup.exe` (installer) or `Plume_x.y.z_x64-portable.exe` (no installation) |
 | Linux | `.AppImage`, `.deb` (Debian, Ubuntu) or `.rpm` (Fedora, openSUSE), x64 and arm64 |
 
 Windows 10 needs Microsoft Edge WebView2, which the installer adds when it is missing (it is
-already part of Windows 11). On Linux, Plume uses WebKitGTK (`libwebkit2gtk-4.1`), which the `.deb`
-and `.rpm` packages install automatically.
+already part of Windows 11 and of up-to-date Windows 10). The portable version runs from anywhere,
+a USB stick included, but cannot install WebView2 and is not offered for opening .md files by
+default: use the installer for that.
+
+On Linux, Plume uses WebKitGTK (`libwebkit2gtk-4.1`), which the `.deb` and `.rpm` packages install
+automatically.
 
 ## Using Plume
 

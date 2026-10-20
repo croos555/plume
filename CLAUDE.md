@@ -71,5 +71,6 @@ See docs/development.md (architecture, windows/files flow, preview sync).
 - `build.yml` (tags `v*`, manual): universal macOS dmg (signed + notarized on tags, same secrets as
   Bucketeer: `MAC_CSC_LINK`, `MAC_CSC_KEY_PASSWORD`, `APPLE_API_KEY_BASE64`, `APPLE_API_KEY_ID`,
   `APPLE_API_ISSUER`), Linux x64/arm64 AppImage/deb/rpm, Windows NSIS installer cross-compiled on
-  Linux with cargo-xwin and signed with ssign/Certum (`CERTUM_USERNAME`, `CERTUM_TOTP_SECRET`)
+  Linux with cargo-xwin plus a portable exe (the bundler restores the unsigned binary in target/ after
+  packing the installer: the portable copy is signed by the workflow), signed with ssign/Certum (`CERTUM_USERNAME`, `CERTUM_TOTP_SECRET`)
   through `build/sign-win.sh`; draft release on tags. See docs/building.md.
