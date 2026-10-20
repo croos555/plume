@@ -381,35 +381,37 @@ pub fn run() {
         .build(tauri::generate_context!())
         .expect("error while building Plume");
 
-    app.run(|app, event| match event {
-        // macOS: files opened from Finder, also on cold start
-        #[cfg(target_os = "macos")]
-        RunEvent::Opened { urls } => {
-            let files = urls
-                .iter()
-                .filter_map(|u| u.to_file_path().ok())
-                .map(|p| p.to_string_lossy().into_owned())
-                .collect();
-            open_files(app, files);
-        }
-        // macOS: clicking the Dock icon with no window open
-        #[cfg(target_os = "macos")]
-        RunEvent::Reopen {
-            has_visible_windows,
-            ..
-        } => {
-            if !has_visible_windows && app.webview_windows().is_empty() {
-                let _ = create_window(app, vec![]);
+    app.run(
+        |#[cfg_attr(not(target_os = "macos"), allow(unused_variables))] app, event| match event {
+            // macOS: files opened from Finder, also on cold start
+            #[cfg(target_os = "macos")]
+            RunEvent::Opened { urls } => {
+                let files = urls
+                    .iter()
+                    .filter_map(|u| u.to_file_path().ok())
+                    .map(|p| p.to_string_lossy().into_owned())
+                    .collect();
+                open_files(app, files);
             }
-        }
-        // macOS apps stay alive without windows, unless the user quit
-        RunEvent::ExitRequested {
-            code: None, api, ..
-        } if cfg!(target_os = "macos") && !QUITTING.load(Ordering::SeqCst) => {
-            api.prevent_exit();
-        }
-        _ => {}
-    });
+            // macOS: clicking the Dock icon with no window open
+            #[cfg(target_os = "macos")]
+            RunEvent::Reopen {
+                has_visible_windows,
+                ..
+            } => {
+                if !has_visible_windows && app.webview_windows().is_empty() {
+                    let _ = create_window(app, vec![]);
+                }
+            }
+            // macOS apps stay alive without windows, unless the user quit
+            RunEvent::ExitRequested {
+                code: None, api, ..
+            } if cfg!(target_os = "macos") && !QUITTING.load(Ordering::SeqCst) => {
+                api.prevent_exit();
+            }
+            _ => {}
+        },
+    );
 }
 
 /// Quit asked from the menu: every window closes itself, asking about unsaved changes first.
