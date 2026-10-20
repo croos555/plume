@@ -1,0 +1,74 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Plume",
+  "version": "0.1.0",
+  "identifier": "io.github.croos555.plume",
+  "build": {
+    "beforeDevCommand": "npm run vite",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build:web",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [],
+    "security": {
+      "csp": {
+        "default-src": "'self'",
+        "script-src": "'self'",
+        "style-src": "'self' 'unsafe-inline'",
+        "img-src": "'self' asset: http://asset.localhost https: data: blob:",
+        "font-src": "'self' data:",
+        "connect-src": "ipc: http://ipc.localhost"
+      },
+      "assetProtocol": {
+        "enable": true,
+        "scope": []
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app", "dmg", "nsis", "deb", "rpm", "appimage"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "category": "Productivity",
+    "shortDescription": "Read and write Markdown, with a live preview",
+    "longDescription": "Plume is a friendly Markdown reader and editor for everyone: open a .md file to read it nicely formatted, switch to editing with a formatting toolbar and a live preview.",
+    "copyright": "MIT License",
+    "publisher": "Christophe Roos",
+    "homepage": "https://github.com/croos555/plume",
+    "license": "MIT",
+    "fileAssociations": [
+      {
+        "ext": ["md", "markdown", "mdown", "mkd"],
+        "name": "Markdown document",
+        "description": "Markdown document",
+        "mimeType": "text/markdown",
+        "contentTypes": ["net.daringfireball.markdown"],
+        "role": "Editor",
+        "rank": "Default"
+      }
+    ],
+    "macOS": {
+      "minimumSystemVersion": "11.0",
+      "hardenedRuntime": true
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": ["English", "French"],
+        "displayLanguageSelector": false
+      }
+    },
+    "linux": {
+      "deb": { "section": "editors" },
+      "rpm": {}
+    }
+  }
+}
