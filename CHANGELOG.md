@@ -5,6 +5,10 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.0] — 2026-10-20
+
+First public release.
+
 ### Added
 - Reading mode: Markdown documents shown nicely formatted (tables, checklists, code highlighting,
   local and web images), with clickable checkboxes and links.
@@ -16,3 +20,6 @@ All notable changes to this project are documented here. The format follows
 - Settings: theme, language (English, French), text size, reading font, autosave, spell check.
 - "Open .md files with Plume" in the settings, offered once at first launch.
 - Packages for macOS (universal dmg), Windows (installer) and Linux (AppImage, deb, rpm).
+
+[Unreleased]: https://github.com/croos555/plume/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/croos555/plume/releases/tag/v0.1.0
