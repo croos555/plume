@@ -80,7 +80,7 @@ jobs:
           rm -f "$RUNNER_TEMP/AuthKey.p8" "$RUNNER_TEMP/developer-id.p12"
           security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: plume-macOS
           path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
@@ -114,7 +114,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npx tauri build --bundles appimage,deb,rpm
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: plume-Linux-${{ matrix.arch }}
           path: |
@@ -202,7 +202,7 @@ jobs:
             grep -q "Signature verification: ok" /tmp/verify.txt
           done
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: plume-Windows
           path: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
